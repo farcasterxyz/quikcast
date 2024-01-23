@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Lato } from 'next/font/google';
 import './globals.css';
+import '@farcaster/auth-kit/styles.css';
 
 const inter = Lato({ subsets: ['latin'], weight: '400' });
 
