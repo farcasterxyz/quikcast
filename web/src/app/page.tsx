@@ -1,15 +1,13 @@
-import Login from '@/components/Login';
+import { FeedPage } from '@/feed/FeedPage';
+import { LandingPage } from '@/landing/LandingPage';
+import { getServerSession } from 'next-auth';
 
-export default function Home() {
-  return (
-    <>
-      <header className="flex flex-row justify-end p-4">
-        <Login />
-      </header>
-      <main className="flex flex-col items-center justify-center p-4">
-        <h1 className="text-4xl pb-1">Quikcast</h1>
-        <h2>A really simple Farcaster app</h2>
-      </main>
-    </>
-  );
+export default async function Home() {
+  const session = await getServerSession();
+
+  if (session) {
+    return <FeedPage />;
+  }
+
+  return <LandingPage />;
 }

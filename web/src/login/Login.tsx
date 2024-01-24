@@ -15,14 +15,15 @@ async function getNonce() {
   return nonce;
 }
 
-function handleSuccess(res: StatusAPIResponse) {
-  signIn('credentials', {
+async function handleSuccess(res: StatusAPIResponse) {
+  const signInResponse = await signIn('credentials', {
     message: res.message,
     signature: res.signature,
     name: res.username,
     pfp: res.pfpUrl,
     redirect: false,
   });
+  console.log({ signInResponse });
 }
 
 export default function Login() {
