@@ -1,0 +1,18 @@
+name: Quikcast
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  web:
+    runs-on: ubuntu-latest # Linux base image
+    steps:
+      - uses: actions/checkout@v3 # Checkout repo
+      - uses: oven-sh/setup-bun@v1 # Setup bun
+        with:
+            bun-version: 1.0.15 # You can also use a specific version
+      - run: cd web
+      - run: bun install # Only needed if you have any dependencies
+      - run: bun run typecheck
+      - run: bun run lint
