@@ -23,7 +23,6 @@ async function handleSuccess(res: StatusAPIResponse) {
     pfp: res.pfpUrl,
     redirect: false,
   });
-  console.log({ signInResponse });
 }
 
 export default function Login() {

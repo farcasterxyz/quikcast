@@ -9,7 +9,6 @@ type CastEmbedProps = {
 
 export function CastEmbed({ embed }: CastEmbedProps) {
   const [error, setError] = useState<unknown>();
-  console.log(embed);
 
   if (error) {
     return null;
