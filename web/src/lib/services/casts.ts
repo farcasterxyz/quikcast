@@ -1,3 +1,4 @@
+import { Embed } from '@shared/types/models';
 import { sql } from 'kysely';
 
 import { db } from '../database/db';
@@ -51,16 +52,17 @@ export async function getCasts({
     .execute();
 
   return casts.map((row) => {
-    const { fid, pfp_url, display_name, bio, username, ...rest } = row;
+    const { fid, pfp_url, display_name, bio, username, embeds, ...rest } = row;
     return {
       ...rest,
       hash: formatHash(row.hash),
+      embeds: embeds as Embed[],
       user: {
         fid,
-        pfp_url,
-        display_name,
-        bio,
-        username,
+        pfp_url: pfp_url as string,
+        display_name: display_name as string,
+        bio: bio as string,
+        username: username as string,
       },
     };
   });

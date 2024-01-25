@@ -15,7 +15,7 @@ export function CastEmbed({ embed }: CastEmbedProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 max-h-[280px] max-w-full aspect-auto">
+    <div className="aspect-auto max-h-[280px] max-w-full overflow-hidden rounded-lg border border-gray-200">
       <img
         key={embed.url}
         src={embed.url}

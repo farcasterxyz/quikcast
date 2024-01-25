@@ -1,4 +1,5 @@
 import { getProfile } from '@lib/services/user';
+import { ProfileApiResponse } from '@shared/types/api';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -7,6 +8,6 @@ export async function GET(request: NextRequest) {
   if (!fid) {
     return NextResponse.json({ error: 'fid is required' }, { status: 400 });
   }
-  const profile = await getProfile({ fid });
-  return NextResponse.json({ profile });
+  const payload: ProfileApiResponse = { profile: await getProfile({ fid }) };
+  return NextResponse.json(payload);
 }

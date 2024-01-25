@@ -1,5 +1,5 @@
-import { Cast } from '@components/feed/Cast';
-import { getFeed } from '@lib/services/feed';
+import { Cast } from "@components/feed/Cast";
+import { getFeed } from "@lib/services/feed";
 
 type FeedPageProps = {
   fid: string;

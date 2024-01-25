@@ -15,7 +15,7 @@ export function Avatar({ user }: AvatarProps) {
 
   return (
     <div
-      className="rounded-full overflow-hidden border border-gray-200 shrink-0"
+      className="shrink-0 overflow-hidden rounded-full border border-gray-200"
       style={{
         width: pfpDiameter,
         height: pfpDiameter,
@@ -26,6 +26,7 @@ export function Avatar({ user }: AvatarProps) {
         className="object-cover"
         width={pfpDiameter}
         height={pfpDiameter}
+        style={{ height: pfpDiameter }}
         onError={() => {
           console.log('error?');
           setSrc(fallbackUrl);

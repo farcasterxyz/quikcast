@@ -1,4 +1,5 @@
 import { getCasts } from '@lib/services/casts';
+import { CastsApiResponse } from '@shared/types/api';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -7,6 +8,6 @@ export async function GET(request: NextRequest) {
   if (!fid) {
     return NextResponse.json({ error: 'fid is required' }, { status: 400 });
   }
-  const casts = await getCasts({ fid });
-  return NextResponse.json({ casts });
+  const payload: CastsApiResponse = { casts: await getCasts({ fid }) };
+  return NextResponse.json(payload);
 }

@@ -9,19 +9,24 @@ type CastProps = {
 
 export function Cast({ cast }: CastProps) {
   return (
-    <div className="[&:not(:first-child)]:border-t border-b-gray-200 px-4 py-3 flex flex-row gap-2">
+    <div className="flex flex-row gap-2 border-b-gray-200 px-4 py-3 [&:not(:first-child)]:border-t">
       <Avatar user={cast.user} />
       <div className="flex flex-col">
-        <div className="flex flex-row casts-center">
-          <span className="font-bold mr-1">{cast.user.display_name}</span>
-          <span className="text-gray-500 mr-1">@{cast.user.username}</span>·
-          <span className="text-gray-500 ml-1">
+        <div className="flex flex-row items-center">
+          <span className="mr-1 font-bold">{cast.user.display_name}</span>
+          <span className="mr-1 text-gray-500">@{cast.user.username}</span>·
+          <span className="ml-1 text-gray-500">
             {formatDistance(new Date(), cast.timestamp)}
           </span>
         </div>
-        <div className="text-balance break-words">{cast.text}</div>
+        <div
+          className="text-balance break-words"
+          style={{ wordBreak: 'break-word' }}
+        >
+          {cast.text}
+        </div>
         {cast.embeds.length > 0 && (
-          <div className="flex flex-col gap-2 mt-2 items-start">
+          <div className="mt-2 flex flex-col items-start gap-2">
             {cast.embeds.map((embed) => (
               <CastEmbed key={embed.url} embed={embed} />
             ))}
