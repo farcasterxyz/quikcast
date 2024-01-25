@@ -3,9 +3,11 @@ import { baseApiUrl } from '@constants/api';
 import { FeedApiResponse } from '@shared/types/api';
 import { Cast as CastType } from '@shared/types/models';
 import { FlashList } from '@shopify/flash-list';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { buildScreen } from '@utils/buildScreen';
-import { View } from 'react-native';
+import { useCallback, useState } from 'react';
+
+const feedKey = ['feed'];
 
 async function fetchFeed(): Promise<FeedApiResponse> {
   const res = await fetch(`${baseApiUrl}/feed?fid=145`);
@@ -17,14 +19,31 @@ function renderItem({ item }: { item: CastType }) {
 }
 
 export const FeedScreen = buildScreen(() => {
+  const queryClient = useQueryClient();
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const { feed } = useSuspenseQuery({
-    queryKey: ['feed'],
+    queryKey: feedKey,
     queryFn: fetchFeed,
   }).data;
 
+  const onRefresh = useCallback(async () => {
+    try {
+      setIsRefreshing(true);
+      queryClient.setQueryData(feedKey, await fetchFeed());
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [queryClient]);
+
   return (
-    <View className="h-full">
-      <FlashList data={feed} renderItem={renderItem} estimatedItemSize={190} />
-    </View>
+    <FlashList
+      data={feed}
+      renderItem={renderItem}
+      estimatedItemSize={190}
+      refreshing={isRefreshing}
+      onRefresh={onRefresh}
+    />
   );
 });

@@ -10,15 +10,15 @@ const queryClient = new QueryClient();
 
 export function App() {
   return (
-    <NavigationContainer>
-      <QueryClientProvider client={queryClient}>
-        <StatusBar style="auto" />
-        <SafeAreaProvider>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <QueryClientProvider client={queryClient}>
+          <StatusBar style="auto" />
           <Suspense fallback={<FullscreenLoader />}>
             <Navigator />
           </Suspense>
-        </SafeAreaProvider>
-      </QueryClientProvider>
-    </NavigationContainer>
+        </QueryClientProvider>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
