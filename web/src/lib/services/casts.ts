@@ -1,7 +1,8 @@
-import { Embed } from '@shared/types/models';
+import { Embeds } from '@shared/types/models';
 import { sql } from 'kysely';
 
 import { db } from '../database/db';
+import { processEmbeds } from './embeds';
 
 export function formatHash(hash: Buffer) {
   return hash.toString('hex');
@@ -56,7 +57,7 @@ export async function getCasts({
     return {
       ...rest,
       hash: formatHash(row.hash),
-      embeds: embeds as Embed[],
+      embeds: processEmbeds(row.embeds as any) as Embeds,
       user: {
         fid,
         pfp_url: pfp_url as string,

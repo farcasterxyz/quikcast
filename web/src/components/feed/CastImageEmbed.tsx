@@ -1,13 +1,12 @@
 'use client';
 
-import { Embed } from '@shared/types/models';
 import { useState } from 'react';
 
-type CastEmbedProps = {
-  embed: Embed;
+type CastImageEmbedProps = {
+  url: string;
 };
 
-export function CastEmbed({ embed }: CastEmbedProps) {
+export function CastImageEmbed({ url }: CastImageEmbedProps) {
   const [error, setError] = useState<unknown>();
 
   if (error) {
@@ -17,9 +16,9 @@ export function CastEmbed({ embed }: CastEmbedProps) {
   return (
     <div className="aspect-auto max-h-[280px] max-w-full overflow-hidden rounded-lg border border-gray-200">
       <img
-        key={embed.url}
-        src={embed.url}
-        alt={embed.url}
+        key={url}
+        src={url}
+        alt={url}
         className="h-auto max-h-[280px]"
         onError={(e) => setError(e)}
       />

@@ -1,5 +1,5 @@
 import { Avatar } from '@components/avatar/Avatar';
-import { CastEmbed } from '@components/feed/CastEmbed';
+import { CastEmbeds } from '@components/feed/CastEmbeds';
 import { Cast as CastType } from '@shared/types/models';
 import { formatDistance } from 'date-fns';
 
@@ -25,13 +25,7 @@ export function Cast({ cast }: CastProps) {
         >
           {cast.text}
         </div>
-        {cast.embeds.length > 0 && (
-          <div className="mt-2 flex flex-col items-start gap-2">
-            {cast.embeds.map((embed) => (
-              <CastEmbed key={embed.url} embed={embed} />
-            ))}
-          </div>
-        )}
+        <CastEmbeds embeds={cast.embeds} />
       </div>
     </div>
   );
