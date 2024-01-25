@@ -8,6 +8,6 @@ export async function GET(request: NextRequest) {
   if (!fid) {
     return NextResponse.json({ error: 'fid is required' }, { status: 400 });
   }
-  const casts = await getCasts(fid);
+  const casts = await getCasts({ fid });
   return NextResponse.json({ casts });
 }

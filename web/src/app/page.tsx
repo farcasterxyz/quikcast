@@ -1,13 +1,12 @@
 // import { getServerSession } from 'next-auth';
 
-// import { FeedPage } from '@/feed/FeedPage';
-import { LandingPage } from '@/landing/LandingPage';
+import { FeedPage } from '@/components/feed/FeedPage';
+import { LandingPage } from '@/components/landing/LandingPage';
 
 export default async function Home() {
   // const session = await getServerSession();
-
   // if (session) {
-  //   return <FeedPage />;
+  return <FeedPage fid="145" />;
   // }
 
   return <LandingPage />;

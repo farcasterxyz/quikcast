@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc",
     "db:codegen": "kysely-codegen --dialect postgres --out-file ./src/lib/database/types.ts"
   },
   "dependencies": {

@@ -6,7 +6,13 @@ export function formatHash(hash: Buffer) {
   return hash.toString('hex');
 }
 
-export async function getCasts(fid: string, limit = 100) {
+export async function getCasts({
+  fid,
+  limit = 100,
+}: {
+  fid: string;
+  limit?: number;
+}) {
   const profile = db
     .selectFrom('user_data')
     .select([
