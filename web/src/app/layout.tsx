@@ -2,9 +2,9 @@ import './globals.css';
 import '@farcaster/auth-kit/styles.css';
 
 import type { Metadata } from 'next';
-import { Lato } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
-const inter = Lato({ subsets: ['latin'], weight: '400' });
+const inter = Inter({ subsets: ['latin'], weight: ['400', '600'] });
 
 export const metadata: Metadata = {
   title: 'Quikcast',

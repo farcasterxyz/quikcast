@@ -7,3 +7,9 @@
     text-wrap: balance;
   }
 }
+
+@layer base {
+  body {
+    font-size: 15px;
+  }
+}

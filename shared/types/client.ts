@@ -1,4 +1,5 @@
 export type Cast = {
+  embeds: Embed[];
   hash: string;
   text: string;
   timestamp: Date;
@@ -11,4 +12,8 @@ export type User = {
   display_name: string;
   bio: string;
   username: string;
+};
+
+export type Embed = {
+  url: string;
 };
