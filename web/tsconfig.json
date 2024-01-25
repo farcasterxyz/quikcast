@@ -14,20 +14,20 @@
     "incremental": true,
     "plugins": [
       {
-        "name": "next"
-      }
+        "name": "next",
+      },
     ],
     "paths": {
       "@*": ["./src/*"],
-      "@shared/*": ["./../shared/*"]
-    }
+      "@shared/*": ["./../shared/*"],
+    },
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../shared/**/*.ts"
+    "../shared/**/*.ts",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

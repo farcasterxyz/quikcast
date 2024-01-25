@@ -1,4 +1,4 @@
-import { Cast } from '@shared/types/models';
+import { Cast, Embeds } from '@shared/types/models';
 import { sql } from 'kysely';
 
 import { db } from '../database/db';
@@ -59,7 +59,7 @@ export async function getFeed({
     const cast: Cast = {
       ...rest,
       hash: formatHash(row.hash),
-      embeds: processEmbeds(row.embeds),
+      embeds: processEmbeds(row.embeds as any) as Embeds,
       user: {
         fid,
         pfp_url: pfp_url as string,

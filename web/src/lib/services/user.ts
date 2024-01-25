@@ -1,3 +1,4 @@
+import { User } from '@shared/types/models';
 import { sql } from 'kysely';
 
 import { db } from '../database/db';
@@ -16,5 +17,5 @@ export async function getProfile({ fid }: { fid: string }) {
     .where('fid', '=', fid)
     .groupBy('fid')
     .execute();
-  return profile[0];
+  return profile[0] as User;
 }
