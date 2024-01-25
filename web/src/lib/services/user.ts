@@ -2,7 +2,7 @@ import { sql } from 'kysely';
 
 import { db } from '../database/db';
 
-export async function getProfile(fid: string) {
+export async function getProfile({ fid }: { fid: string }) {
   const profile = await db
     .selectFrom('user_data')
     .select([

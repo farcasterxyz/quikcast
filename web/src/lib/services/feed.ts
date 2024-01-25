@@ -1,9 +1,16 @@
+import { Cast } from '@shared/types/client';
 import { sql } from 'kysely';
 
 import { db } from '../database/db';
 import { formatHash } from './casts';
 
-export async function getFeed(fid: string, limit = 100) {
+export async function getFeed({
+  fid,
+  limit = 100,
+}: {
+  fid: string;
+  limit?: number;
+}) {
   const follows = db
     .selectFrom('links')
     .select('target_fid')
@@ -48,16 +55,18 @@ export async function getFeed(fid: string, limit = 100) {
 
   return casts.map((row) => {
     const { fid, pfp_url, display_name, bio, username, ...rest } = row;
-    return {
+    const cast: Cast = {
       ...rest,
       hash: formatHash(row.hash),
       user: {
         fid,
-        pfp_url,
-        display_name,
-        bio,
-        username,
+        pfp_url: pfp_url as string,
+        display_name: display_name as string,
+        bio: bio as string,
+        username: username as string,
       },
     };
+
+    return cast;
   });
 }
