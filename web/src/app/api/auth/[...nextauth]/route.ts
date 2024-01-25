@@ -1,8 +1,6 @@
-import CredentialsProvider from 'next-auth/providers/credentials';
 import { createAppClient, viemConnector } from '@farcaster/auth-client';
-
 import NextAuth from 'next-auth';
-import { NextRequest } from 'next/server';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 const auth = NextAuth({
   providers: [

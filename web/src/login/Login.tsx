@@ -6,7 +6,7 @@ import {
   SignInButton,
   StatusAPIResponse,
 } from '@farcaster/auth-kit';
-import { signIn, getCsrfToken } from 'next-auth/react';
+import { getCsrfToken, signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 async function getNonce() {
