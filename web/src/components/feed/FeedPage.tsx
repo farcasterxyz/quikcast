@@ -1,5 +1,5 @@
-import { FeedItem } from '@/components/feed/FeedItem';
-import { getFeed } from '@/lib/services/feed';
+import { Cast } from '@components/feed/Cast';
+import { getFeed } from '@lib/services/feed';
 
 type FeedPageProps = {
   fid: string;
@@ -10,8 +10,8 @@ export async function FeedPage({ fid }: FeedPageProps) {
 
   return (
     <div className="container m-auto max-w-[660px] border-x border-gray-200">
-      {feed.map((item) => (
-        <FeedItem key={item.hash} item={item} />
+      {feed.map((cast) => (
+        <Cast key={cast.hash} cast={cast} />
       ))}
     </div>
   );

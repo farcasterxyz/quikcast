@@ -1,4 +1,4 @@
-import { User } from '@shared/types/client';
+import { User } from '@shared/types/models';
 
 const pfpDiameter = 46;
 
