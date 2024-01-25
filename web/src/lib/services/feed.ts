@@ -1,4 +1,4 @@
-import { Cast } from '@shared/types/client';
+import { Cast } from '@shared/types/models';
 import { sql } from 'kysely';
 
 import { db } from '../database/db';

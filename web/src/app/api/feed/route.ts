@@ -1,6 +1,5 @@
+import { getFeed } from '@lib/services/feed';
 import { type NextRequest, NextResponse } from 'next/server';
-
-import { getFeed } from '@/lib/services/feed';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
