@@ -3,14 +3,14 @@
 import { User } from '@shared/types/models';
 import { useState } from 'react';
 
-const pfpDiameter = 46;
 const fallbackUrl = '/default-avatar.png';
 
 type AvatarProps = {
   user: User;
+  pfpDiameter?: number;
 };
 
-export function Avatar({ user }: AvatarProps) {
+export function Avatar({ user, pfpDiameter = 46 }: AvatarProps) {
   const [src, setSrc] = useState(user.pfp_url || fallbackUrl);
 
   return (
