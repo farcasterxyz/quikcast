@@ -1,17 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nodeExternals = require('webpack-node-externals');
 
-const nextConfig = {
+import { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   reactStrictMode: true,
 };
 
-module.exports = {
-  ...nextConfig,
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.externals = [nodeExternals()];
-    }
-
-    return config;
-  },
-};
+export default nextConfig;
