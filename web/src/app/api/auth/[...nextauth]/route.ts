@@ -2,7 +2,9 @@ import { createAppClient, viemConnector } from "@farcaster/auth-client";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const auth = NextAuth({
+import { getProfile } from '../../../../lib/services/user';
+
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Sign in with Farcaster",
@@ -18,15 +20,6 @@ const auth = NextAuth({
           placeholder: "0x0",
         },
         csrfToken: {
-          type: "text",
-        },
-        // In a production app with a server, these should be fetched from
-        // your Farcaster data indexer rather than have them accepted as part
-        // of credentials.
-        name: {
-          type: "text",
-        },
-        pfp: {
           type: "text",
         },
       },
@@ -50,13 +43,20 @@ const auth = NextAuth({
 
         return {
           id: fid.toString(),
-          name: credentials?.name,
-          image: credentials?.pfp,
         };
       },
     }),
   ],
-});
+  callbacks: {
+    async session({ session, token }) {
+      const profile = await getProfile({ fid: token.sub });
+      session.user = profile;
+      return session;
+    },
+  },
+};
+
+const auth = NextAuth(authOptions);
 
 export const GET = auth;
 export const POST = auth;
