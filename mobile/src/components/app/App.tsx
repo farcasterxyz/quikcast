@@ -1,5 +1,5 @@
-import { FullscreenLoader } from '@components/loader/FullscreenLoader';
-import { Navigator } from '@components/navigation/Navigator';
+import { FullscreenLoader } from '@mobile/components/loader/FullscreenLoader';
+import { Navigator } from '@mobile/components/navigation/Navigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';

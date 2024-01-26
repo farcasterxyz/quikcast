@@ -4,7 +4,7 @@ export type FeedApiResponse = {
   feed: Cast[];
 };
 
-export type CastsApiResponse = {
+export type ProfileCastsApiResponse = {
   casts: Cast[];
 };
 
