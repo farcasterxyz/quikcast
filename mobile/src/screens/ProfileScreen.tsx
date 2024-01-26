@@ -47,14 +47,14 @@ export const ProfileScreen = buildScreen(() => {
     <View className="flex-1 flex-col justify-between">
       <View className="flex-row  p-4">
         <Avatar user={profile} size="lg" />
-        <View className="flex-col pl-2">
+        <View className="shrink flex-col pl-2">
           <Text className="mt-2 text-2xl font-bold">
             {profile.display_name}
           </Text>
           <Text className="text-gray-600">@{profile.username}</Text>
           {profile.bio && (
             <Text
-              className="mt-1 text-xs"
+              className="mt-1 flex-wrap text-xs"
               ellipsizeMode="tail"
               numberOfLines={2}
             >
