@@ -1,8 +1,8 @@
 import { Cast } from "@components/feed/Cast";
-import { Profile } from '@components/profile/Profile';
+import { Profile } from "@components/profile/Profile";
 import { getFeed } from "@lib/services/feed";
 
-import { getProfile } from '../../lib/services/user';
+import { getProfile } from "../../lib/services/user";
 
 type FeedPageProps = {
   fid: string;

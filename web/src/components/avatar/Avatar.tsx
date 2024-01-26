@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { User } from '@shared/types/models';
-import { useMemo, useState } from 'react';
+import { User } from "@shared/types/models";
+import { useMemo, useState } from "react";
 
-const fallbackUrl = '/default-avatar.png';
+const fallbackUrl = "/default-avatar.png";
 
 type AvatarProps = {
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   user: User;
   pfpDiameter?: number;
 };
-export function Avatar({ size = 'md', user }: AvatarProps) {
+export function Avatar({ size = "md", user }: AvatarProps) {
   const [src, setSrc] = useState(user.pfp_url || fallbackUrl);
 
   const diameter = useMemo(() => {
     switch (size) {
-      case 'sm':
+      case "sm":
         return 32;
-      case 'md':
+      case "md":
         return 46;
       default:
         return 86;

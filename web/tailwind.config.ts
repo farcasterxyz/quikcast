@@ -5,8 +5,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'fc-purple': '#7c65c1'
-      }
+        "fc-purple": "#7c65c1",
+      },
     },
   },
   plugins: [],

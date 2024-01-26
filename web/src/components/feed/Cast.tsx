@@ -1,7 +1,7 @@
-import { Avatar } from '@components/avatar/Avatar';
-import { CastEmbeds } from '@components/feed/CastEmbeds';
-import { Cast as CastType } from '@shared/types/models';
-import { formatDistance } from 'date-fns';
+import { Avatar } from "@components/avatar/Avatar";
+import { CastEmbeds } from "@components/feed/CastEmbeds";
+import { Cast as CastType } from "@shared/types/models";
+import { formatDistance } from "date-fns";
 
 type CastProps = {
   cast: CastType;
@@ -21,7 +21,7 @@ export function Cast({ cast }: CastProps) {
         </div>
         <div
           className="text-balance break-words"
-          style={{ wordBreak: 'break-word' }}
+          style={{ wordBreak: "break-word" }}
         >
           {cast.text}
         </div>

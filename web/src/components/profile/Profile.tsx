@@ -1,7 +1,7 @@
-import { User } from '@shared/types/models';
+import { User } from "@shared/types/models";
 
-import { Avatar } from '../avatar/Avatar';
-import Logout from '../logout/Logout';
+import { Avatar } from "../avatar/Avatar";
+import Logout from "../logout/Logout";
 
 type ProfileProps = {
   user: User;

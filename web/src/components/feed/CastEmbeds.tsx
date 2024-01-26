@@ -1,6 +1,6 @@
-import { Embeds } from '@shared/types/models';
+import { Embeds } from "@shared/types/models";
 
-import { CastImageEmbed } from './CastImageEmbed';
+import { CastImageEmbed } from "./CastImageEmbed";
 
 type CastEmbedsProps = {
   embeds: Embeds;

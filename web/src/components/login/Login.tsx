@@ -33,8 +33,8 @@ export default function Login() {
       config={{
         relay: "https://relay.farcaster.xyz",
         rpcUrl: "https://mainnet.optimism.io",
-        siweUri: "http://example.com/login",
-        domain: "example.com",
+        siweUri: "http://localhost:3000",
+        domain: "http://localhost:3000",
       }}
     >
       <SignInButton
@@ -46,3 +46,5 @@ export default function Login() {
     </AuthKitProvider>
   );
 }
+
+function Button() {}
