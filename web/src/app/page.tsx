@@ -5,11 +5,10 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 
 export default async function Home() {
-  const {
-    user: { fid },
-  } = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-  if (fid) {
+  if (session) {
+    const { user: { fid } } = session;
     return (
       <div>
         <FeedPage fid={fid} />
