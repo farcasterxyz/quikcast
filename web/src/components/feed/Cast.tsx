@@ -1,5 +1,6 @@
 import { Avatar } from "@components/avatar/Avatar";
 import { CastEmbeds } from "@components/feed/CastEmbeds";
+import Linkify from "@components/linkify/Linkify";
 import { Cast as CastType } from "@shared/types/models";
 import { formatDistance } from "date-fns";
 
@@ -23,7 +24,7 @@ export function Cast({ cast }: CastProps) {
           className="text-balance break-words"
           style={{ wordBreak: "break-word" }}
         >
-          {cast.text}
+          <Linkify>{cast.text}</Linkify>
         </div>
         <CastEmbeds embeds={cast.embeds} />
       </div>
