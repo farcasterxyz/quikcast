@@ -31,7 +31,7 @@ export const authOptions = {
         const verifyResponse = await appClient.verifySignInMessage({
           message: credentials!.message as string,
           signature: credentials!.signature as `0x${string}`,
-          domain: "http://localhost:3000",
+          domain: "example.com",
           nonce: credentials!.csrfToken,
         });
 

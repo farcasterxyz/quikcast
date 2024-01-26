@@ -34,7 +34,7 @@ export default function Login() {
         relay: "https://relay.farcaster.xyz",
         rpcUrl: "https://mainnet.optimism.io",
         siweUri: "http://localhost:3000",
-        domain: "http://localhost:3000",
+        domain: "example.com",
       }}
     >
       <SignInButton
