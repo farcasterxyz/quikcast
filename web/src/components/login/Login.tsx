@@ -16,12 +16,12 @@ async function getNonce() {
 }
 
 async function handleSuccess(res: StatusAPIResponse) {
-  const signInResponse = await signIn("credentials", {
+  await signIn("credentials", {
     message: res.message,
     signature: res.signature,
     name: res.username,
     pfp: res.pfpUrl,
-    redirect: false,
+    redirect: true,
   });
 }
 
