@@ -1,7 +1,8 @@
-import { Avatar } from "@components/avatar/Avatar";
-import { CastEmbeds } from "@components/feed/CastEmbeds";
-import { Cast as CastType } from "@shared/types/models";
-import { formatDistance } from "date-fns";
+import { Avatar } from '@components/avatar/Avatar';
+import { CastEmbeds } from '@components/feed/CastEmbeds';
+import { Cast as CastType } from '@shared/types/models';
+import { formatDistance } from 'date-fns';
+import Linkify from 'linkify-react';
 
 type CastProps = {
   cast: CastType;
@@ -23,7 +24,17 @@ export function Cast({ cast }: CastProps) {
           className="text-balance break-words"
           style={{ wordBreak: "break-word" }}
         >
-          {cast.text}
+          <Linkify
+            options={{
+              attributes: {
+                target: '_blank',
+                rel: 'nofollow',
+                className: 'text-violet-500 hover:underline cursor-pointer',
+              },
+            }}
+          >
+            {cast.text}
+          </Linkify>
         </div>
         <CastEmbeds embeds={cast.embeds} />
       </div>
