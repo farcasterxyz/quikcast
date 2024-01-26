@@ -1,10 +1,9 @@
 import { getFeed } from '@lib/services/feed';
 import { FeedApiResponse } from '@shared/types/api';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const fid = searchParams.get('fid');
+export async function GET(request: Request) {
+  const fid = new URL(request.url).searchParams.get('fid');
   if (!fid) {
     return NextResponse.json({ error: 'fid is required' }, { status: 400 });
   }

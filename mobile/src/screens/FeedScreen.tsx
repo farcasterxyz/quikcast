@@ -1,10 +1,10 @@
-import { Cast } from '@components/feed/Cast';
-import { baseApiUrl } from '@constants/api';
+import { Cast } from '@mobile/components/feed/Cast';
+import { baseApiUrl } from '@mobile/constants/api';
+import { buildScreen } from '@mobile/utils/buildScreen';
 import { FeedApiResponse } from '@shared/types/api';
 import { Cast as CastType } from '@shared/types/models';
 import { FlashList } from '@shopify/flash-list';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { buildScreen } from '@utils/buildScreen';
 import { useCallback, useState } from 'react';
 
 const feedKey = ['feed'];

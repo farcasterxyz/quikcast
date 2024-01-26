@@ -4,7 +4,7 @@
     "jsx": "preserve",
     "strict": true,
     "paths": {
-      "@*": ["./src/*"],
+      "@mobile/*": ["./src/*"],
       "@shared/*": ["./../shared/*"],
     },
   },

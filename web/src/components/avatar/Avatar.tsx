@@ -1,34 +1,44 @@
 'use client';
 
 import { User } from '@shared/types/models';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const fallbackUrl = '/default-avatar.png';
 
 type AvatarProps = {
+  size?: 'sm' | 'md' | 'lg';
   user: User;
   pfpDiameter?: number;
 };
-
-export function Avatar({ user, pfpDiameter = 46 }: AvatarProps) {
+export function Avatar({ size = 'md', user }: AvatarProps) {
   const [src, setSrc] = useState(user.pfp_url || fallbackUrl);
+
+  const diameter = useMemo(() => {
+    switch (size) {
+      case 'sm':
+        return 32;
+      case 'md':
+        return 46;
+      default:
+        return 86;
+    }
+  }, [size]);
 
   return (
     <div
       className="shrink-0 overflow-hidden rounded-full border border-gray-200"
       style={{
-        width: pfpDiameter,
-        height: pfpDiameter,
+        width: diameter,
+        height: diameter,
       }}
     >
       <img
         src={src}
         className="object-cover"
-        width={pfpDiameter}
-        height={pfpDiameter}
-        style={{ height: pfpDiameter }}
+        width={diameter}
+        height={diameter}
+        style={{ height: diameter }}
         onError={() => {
-          console.log('error?');
           setSrc(fallbackUrl);
         }}
       />

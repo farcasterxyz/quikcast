@@ -1,4 +1,4 @@
-import { FullscreenLoader } from '@components/loader/FullscreenLoader';
+import { FullscreenLoader } from '@mobile/components/loader/FullscreenLoader';
 import { FC, Suspense } from 'react';
 import { SafeAreaView } from 'react-native';
 

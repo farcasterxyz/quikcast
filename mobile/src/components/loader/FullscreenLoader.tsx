@@ -4,7 +4,7 @@ import { Loader } from './Loader';
 
 export function FullscreenLoader() {
   return (
-    <View className="flex flex-col items-center justify-center">
+    <View className="flex-1 flex-col items-center justify-center">
       <Loader />
     </View>
   );
