@@ -56,7 +56,7 @@ export const authOptions = {
   },
 };
 
-const auth = NextAuth(authOptions);
+const auth = NextAuth(authOptions) as any;
 
 export const GET = auth;
 export const POST = auth;
