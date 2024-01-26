@@ -1,8 +1,7 @@
-import Linkify from 'linkify-react';
-import { User } from '@shared/types/models';
-
-import { Avatar } from "../avatar/Avatar";
-import Logout from "../logout/Logout";
+import { Avatar } from "@components/avatar/Avatar";
+import Linkify from "@components/linkify/Linkify";
+import Logout from "@components/logout/Logout";
+import { User } from "@shared/types/models";
 
 type ProfileProps = {
   user: User;
@@ -17,17 +16,7 @@ export function Profile({ user }: ProfileProps) {
           <span className="font-bold">{user.display_name}</span>
           <span className="text-gray-500">@{user.username}</span>
           <div className="mt-2">
-            <Linkify
-              options={{
-                attributes: {
-                  target: '_blank',
-                  rel: 'nofollow',
-                  className: 'text-violet-500 hover:underline cursor-pointer',
-                },
-              }}
-            >
-              {user.bio}
-            </Linkify>
+            <Linkify>{user.bio}</Linkify>
           </div>
         </div>
         <div className="grow" />
