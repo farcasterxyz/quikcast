@@ -1,10 +1,9 @@
 import { getCasts } from '@lib/services/casts';
 import { ProfileCastsApiResponse } from '@shared/types/api';
-import { NextApiRequest } from 'next';
 import { NextResponse } from 'next/server';
 
 export async function GET(
-  _request: NextApiRequest,
+  _request: Request,
   { params: { fid } }: { params: { fid: string } },
 ) {
   if (!fid) {

@@ -1,33 +1,26 @@
-import { createAppClient, viemConnector } from "@farcaster/auth-client";
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import { createAppClient, viemConnector } from '@farcaster/auth-client';
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
-const auth = NextAuth({
+import { getProfile } from '../../../../lib/services/user';
+
+export const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "Sign in with Farcaster",
+      name: 'Sign in with Farcaster',
       credentials: {
         message: {
-          label: "Message",
-          type: "text",
-          placeholder: "0x0",
+          label: 'Message',
+          type: 'text',
+          placeholder: '0x0',
         },
         signature: {
-          label: "Signature",
-          type: "text",
-          placeholder: "0x0",
+          label: 'Signature',
+          type: 'text',
+          placeholder: '0x0',
         },
         csrfToken: {
-          type: "text",
-        },
-        // In a production app with a server, these should be fetched from
-        // your Farcaster data indexer rather than have them accepted as part
-        // of credentials.
-        name: {
-          type: "text",
-        },
-        pfp: {
-          type: "text",
+          type: 'text',
         },
       },
       async authorize(credentials) {
@@ -38,7 +31,7 @@ const auth = NextAuth({
         const verifyResponse = await appClient.verifySignInMessage({
           message: credentials!.message as string,
           signature: credentials!.signature as `0x${string}`,
-          domain: "example.com",
+          domain: 'example.com',
           nonce: credentials!.csrfToken,
         });
 
@@ -50,13 +43,20 @@ const auth = NextAuth({
 
         return {
           id: fid.toString(),
-          name: credentials?.name,
-          image: credentials?.pfp,
         };
       },
     }),
   ],
-});
+  callbacks: {
+    async session({ session, token }: any) {
+      const profile = await getProfile({ fid: token.sub });
+      session.user = profile;
+      return session;
+    },
+  },
+};
+
+const auth = NextAuth(authOptions);
 
 export const GET = auth;
 export const POST = auth;

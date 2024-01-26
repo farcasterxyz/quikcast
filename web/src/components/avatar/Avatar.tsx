@@ -8,6 +8,7 @@ const fallbackUrl = '/default-avatar.png';
 type AvatarProps = {
   size?: 'sm' | 'md' | 'lg';
   user: User;
+  pfpDiameter?: number;
 };
 export function Avatar({ size = 'md', user }: AvatarProps) {
   const [src, setSrc] = useState(user.pfp_url || fallbackUrl);
