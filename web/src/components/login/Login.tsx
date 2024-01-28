@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
 import {
   AuthClientError,
   AuthKitProvider,
   SignInButton,
   StatusAPIResponse,
-} from "@farcaster/auth-kit";
-import { getCsrfToken, signIn } from "next-auth/react";
-import { useState } from "react";
+} from '@farcaster/auth-kit';
+import { getCsrfToken, signIn } from 'next-auth/react';
+import { useState } from 'react';
 
 async function getNonce() {
   const nonce = await getCsrfToken();
-  if (!nonce) throw new Error("Unable to generate nonce");
+  if (!nonce) throw new Error('Unable to generate nonce');
   return nonce;
 }
 
 async function handleSuccess(res: StatusAPIResponse) {
-  await signIn("credentials", {
+  await signIn('credentials', {
     message: res.message,
     signature: res.signature,
     name: res.username,
@@ -31,10 +31,10 @@ export default function Login() {
   return (
     <AuthKitProvider
       config={{
-        relay: "https://relay.farcaster.xyz",
-        rpcUrl: "https://mainnet.optimism.io",
-        siweUri: "http://localhost:3000",
-        domain: "example.com",
+        relay: 'https://relay.farcaster.xyz',
+        rpcUrl: 'https://mainnet.optimism.io',
+        siweUri: 'http://localhost:3000',
+        domain: 'localhost:3000',
       }}
     >
       <SignInButton

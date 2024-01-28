@@ -6,6 +6,7 @@ import {
   useContext,
   useState,
 } from 'react';
+import { Linking } from 'react-native';
 
 const AuthContext = createContext<{
   isSignedIn: boolean;
@@ -26,14 +27,15 @@ type AuthProviderProps = {
 };
 
 function AuthProviderContent({ children }: AuthProviderProps) {
-  const { signIn: authKitSignIn } = useSignIn({});
+  const { url } = useSignIn({});
   const [token, setToken] = useState<string>();
 
   const signIn = useCallback(async () => {
-    const res = await authKitSignIn();
-    console.log(res);
-    setToken(res);
-  }, [authKitSignIn]);
+    console.log(url);
+    if (url) {
+      Linking.openURL(url);
+    }
+  }, [url]);
 
   return (
     <AuthContext.Provider value={{ isSignedIn: !!token, signIn, token }}>
@@ -49,7 +51,7 @@ export function AuthProvider(props: AuthProviderProps) {
         relay: 'https://relay.farcaster.xyz',
         rpcUrl: 'https://mainnet.optimism.io',
         siweUri: 'http://localhost:3000',
-        domain: 'example.com',
+        domain: 'localhost:3000',
       }}
     >
       <AuthProviderContent {...props} />
