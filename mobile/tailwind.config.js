@@ -3,7 +3,11 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'fc-purple': '#7c65c1',
+      },
+    },
   },
   plugins: [],
 };

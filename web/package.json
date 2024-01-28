@@ -12,7 +12,7 @@
     "db:codegen": "kysely-codegen --dialect postgres --out-file ./src/lib/database/types.ts"
   },
   "dependencies": {
-    "@farcaster/auth-kit": "^0.0.39",
+    "@farcaster/auth-kit": "0.1.4",
     "@farcaster/core": "^0.13.4",
     "date-fns": "^3.3.1",
     "linkify-it": "^5.0.0",
