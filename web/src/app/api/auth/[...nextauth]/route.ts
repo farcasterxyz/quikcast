@@ -1,10 +1,13 @@
 import { createAppClient, viemConnector } from '@farcaster/auth-client';
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { getProfile } from '../../../../lib/services/user';
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     CredentialsProvider({
       name: 'Sign in with Farcaster',
@@ -23,6 +26,7 @@ export const authOptions = {
           type: 'text',
         },
       },
+
       async authorize(credentials) {
         const appClient = createAppClient({
           ethereum: viemConnector(),
@@ -48,6 +52,9 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async jwt({ token }) {
+      return token;
+    },
     async session({ session, token }: any) {
       const profile = await getProfile({ fid: token.sub });
       session.user = profile;
@@ -56,7 +63,7 @@ export const authOptions = {
   },
 };
 
-const auth = NextAuth(authOptions) as any;
+const auth = NextAuth(authOptions);
 
 export const GET = auth;
 export const POST = auth;

@@ -27,15 +27,24 @@ type AuthProviderProps = {
 };
 
 function AuthProviderContent({ children }: AuthProviderProps) {
-  const { url } = useSignIn({});
   const [token, setToken] = useState<string>();
 
+  const {
+    connect,
+    url,
+    signIn: authKitSignIn,
+  } = useSignIn({
+    onSuccess: (res) => {
+      // setToken(res);
+    },
+  });
   const signIn = useCallback(async () => {
-    console.log(url);
-    if (url) {
-      Linking.openURL(url);
-    }
-  }, [url]);
+    // if (url) {
+    await connect();
+    await authKitSignIn(); // Starts polling
+    Linking.openURL(url);
+    // }
+  }, [authKitSignIn, connect, url]);
 
   return (
     <AuthContext.Provider value={{ isSignedIn: !!token, signIn, token }}>
