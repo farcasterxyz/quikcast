@@ -6,25 +6,20 @@ import {
   SignInButton,
   StatusAPIResponse,
 } from '@farcaster/auth-kit';
-import { getCsrfToken, signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 async function getNonce() {
-  const nonce = await getCsrfToken();
-  if (!nonce) throw new Error('Unable to generate nonce');
-  return nonce;
+  return window.crypto.randomUUID();
 }
 
 async function handleSuccess(res: StatusAPIResponse) {
-  const x = await signIn('credentials', {
-    message: res.message,
-    signature: res.signature,
-    name: res.username,
-    pfp: res.pfpUrl,
-    redirect: false,
+  await fetch('/auth/sign-in', {
+    method: 'POST',
+    body: JSON.stringify({
+      message: res.message,
+      signature: res.signature,
+    }),
   });
-
-  console.log(x);
 }
 
 export default function Login() {
@@ -39,12 +34,14 @@ export default function Login() {
         domain: 'localhost:3000',
       }}
     >
-      <SignInButton
-        nonce={getNonce}
-        onSuccess={handleSuccess}
-        onError={setError}
-      />
-      {error && <div className="pt-4 text-red-500">{error.message}</div>}
+      <div className="flex flex-col gap-2">
+        <SignInButton
+          nonce={getNonce}
+          onSuccess={handleSuccess}
+          onError={setError}
+        />
+        {error && <div className="pt-4 text-red-500">{error.message}</div>}
+      </div>
     </AuthKitProvider>
   );
 }
