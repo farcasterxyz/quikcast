@@ -1,28 +1,23 @@
-"use client";
+'use client';
 
 import {
   AuthClientError,
   AuthKitProvider,
   SignInButton,
   StatusAPIResponse,
-} from "@farcaster/auth-kit";
-import { getCsrfToken, signIn } from "next-auth/react";
-import { useState } from "react";
-
-async function getNonce() {
-  const nonce = await getCsrfToken();
-  if (!nonce) throw new Error("Unable to generate nonce");
-  return nonce;
-}
+} from '@farcaster/auth-kit';
+import { useState } from 'react';
 
 async function handleSuccess(res: StatusAPIResponse) {
-  await signIn("credentials", {
-    message: res.message,
-    signature: res.signature,
-    name: res.username,
-    pfp: res.pfpUrl,
-    redirect: true,
+  await fetch('/api/auth/sign-in', {
+    method: 'POST',
+    body: JSON.stringify({
+      message: res.message,
+      signature: res.signature,
+    }),
   });
+
+  window.location.reload();
 }
 
 export default function Login() {
@@ -31,18 +26,16 @@ export default function Login() {
   return (
     <AuthKitProvider
       config={{
-        relay: "https://relay.farcaster.xyz",
-        rpcUrl: "https://mainnet.optimism.io",
-        siweUri: "http://localhost:3000",
-        domain: "example.com",
+        relay: 'https://relay.farcaster.xyz',
+        rpcUrl: 'https://mainnet.optimism.io',
+        siweUri: 'http://localhost:3000',
+        domain: 'localhost:3000',
       }}
     >
-      <SignInButton
-        nonce={getNonce}
-        onSuccess={handleSuccess}
-        onError={setError}
-      />
-      {error && <div className="pt-4 text-red-500">{error.message}</div>}
+      <div className="flex flex-col gap-2">
+        <SignInButton onSuccess={handleSuccess} onError={setError} />
+        {error && <div className="pt-4 text-red-500">{error.message}</div>}
+      </div>
     </AuthKitProvider>
   );
 }

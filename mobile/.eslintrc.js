@@ -18,7 +18,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'simple-import-sort/exports': 'error',
     'simple-import-sort/imports': 'error',
-    'tailwindcss/no-custom-classname': 'error',
+    'tailwindcss/no-custom-classname': 'off',
     'unused-imports/no-unused-imports': 'error',
   },
 };

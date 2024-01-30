@@ -1,5 +1,6 @@
 export type RootParamList = {
   Feed: NoParams;
+  Landing: NoParams;
   Profile: { displayName: string; fid: string };
 };
 
