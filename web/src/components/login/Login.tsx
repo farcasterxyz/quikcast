@@ -9,15 +9,20 @@ import {
 import { useState } from 'react';
 
 async function handleSuccess(res: StatusAPIResponse) {
-  await fetch('/api/auth/sign-in', {
+  const signInresponse = await fetch('/api/auth/sign-in', {
     method: 'POST',
     body: JSON.stringify({
       message: res.message,
+      nonce: res.nonce,
       signature: res.signature,
     }),
   });
 
-  window.location.reload();
+  if (signInresponse.ok) {
+    window.location.reload();
+  } else {
+    alert('Sign in failed');
+  }
 }
 
 export default function Login() {
@@ -39,5 +44,3 @@ export default function Login() {
     </AuthKitProvider>
   );
 }
-
-function Button() {}

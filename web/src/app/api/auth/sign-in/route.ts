@@ -1,4 +1,6 @@
-import { createAppClient, viemConnector } from '@farcaster/auth-kit';
+import { createAppClient, viemConnector } from '@farcaster/auth-client';
+import { setCurrentUser } from '@lib/auth/setCurrentUser';
+import { randomUUID } from 'crypto';
 import { NextResponse } from 'next/server';
 
 type RequestBody = {
@@ -21,16 +23,16 @@ export async function POST(request: Request) {
     signature,
   });
 
-  if (!verifyResult.success) {
-    return NextResponse.json(verifyResult.error || 'Sign in failed', {
+  if (verifyResult.isError) {
+    return NextResponse.json(verifyResult.error?.message || 'Sign in failed', {
       status: 401,
     });
   }
 
-  const token = window.crypto.randomUUID();
+  const token = randomUUID();
+  const fid = verifyResult.fid.toString();
 
-  return NextResponse.json({
-    id: verifyResult.fid.toString(),
-    token,
-  });
+  setCurrentUser({ token, fid });
+
+  return NextResponse.json({ fid, token });
 }
