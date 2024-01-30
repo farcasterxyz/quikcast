@@ -10,7 +10,7 @@ export function formatHash(hash: Buffer) {
 
 export async function getCasts({
   fid,
-  limit = 100,
+  limit = 25,
 }: {
   fid: string;
   limit?: number;
