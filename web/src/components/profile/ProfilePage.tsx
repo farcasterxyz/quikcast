@@ -1,10 +1,22 @@
-export async function ProfilePage() {
-  // const [] = await Promise.all([getProfile({ fid })]);
+import { Feed } from "@components/feed/Feed";
+import { Nav } from "@components/nav/Nav";
+import { Profile } from "@components/profile/Profile";
+import { getCasts } from "@lib/services/casts";
+import { getProfile } from "@lib/services/user";
+
+type ProfilePageProps = {
+  fid: string;
+};
+
+export async function ProfilePage({ fid }: ProfilePageProps) {
+  const casts = await getCasts({ fid });
+  const user = await getProfile({ fid });
+
   return (
-    <>
-      <main className="flex flex-col items-center justify-center p-4">
-        Profile
-      </main>
-    </>
+    <div className="container m-auto max-w-[660px] border-x border-gray-200">
+      <Profile user={user} />
+      <Nav />
+      <Feed casts={casts} />
+    </div>
   );
 }

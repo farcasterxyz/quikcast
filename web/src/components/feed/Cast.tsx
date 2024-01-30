@@ -37,7 +37,7 @@ export function Cast({ cast }: CastProps) {
           </span>
         </div>
         <div
-          className="text-balance break-words"
+          className="whitespace-pre-line text-balance break-words"
           style={{ wordBreak: "break-word" }}
         >
           <Linkify>{cast.text}</Linkify>

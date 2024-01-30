@@ -25,9 +25,9 @@ export function Profile({ user }: ProfileProps) {
             </a>
           </span>
           <span className="text-gray-500">@{user.username}</span>
-          <div className="mt-2">
+          <span className="mt-2">
             <Linkify>{user.bio}</Linkify>
-          </div>
+          </span>
         </div>
         <div className="grow" />
         <Logout />
