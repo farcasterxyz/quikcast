@@ -7,7 +7,7 @@ import { processEmbeds } from "./embeds";
 
 export async function getFeed({
   fid,
-  limit = 50,
+  limit = 25,
 }: {
   fid: string;
   limit?: number;
