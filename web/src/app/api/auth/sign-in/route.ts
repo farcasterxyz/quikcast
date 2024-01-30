@@ -27,7 +27,10 @@ export async function POST(request: Request) {
     });
   }
 
+  const token = window.crypto.randomUUID();
+
   return NextResponse.json({
     id: verifyResult.fid.toString(),
+    token,
   });
 }

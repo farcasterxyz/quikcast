@@ -8,18 +8,16 @@ import {
 } from '@farcaster/auth-kit';
 import { useState } from 'react';
 
-async function getNonce() {
-  return window.crypto.randomUUID();
-}
-
 async function handleSuccess(res: StatusAPIResponse) {
-  await fetch('/auth/sign-in', {
+  await fetch('/api/auth/sign-in', {
     method: 'POST',
     body: JSON.stringify({
       message: res.message,
       signature: res.signature,
     }),
   });
+
+  window.location.reload();
 }
 
 export default function Login() {
@@ -35,11 +33,7 @@ export default function Login() {
       }}
     >
       <div className="flex flex-col gap-2">
-        <SignInButton
-          nonce={getNonce}
-          onSuccess={handleSuccess}
-          onError={setError}
-        />
+        <SignInButton onSuccess={handleSuccess} onError={setError} />
         {error && <div className="pt-4 text-red-500">{error.message}</div>}
       </div>
     </AuthKitProvider>
