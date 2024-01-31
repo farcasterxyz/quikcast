@@ -1,6 +1,7 @@
 import { baseApiUrl } from '@mobile/constants/api';
 import { ProfileCastsApiResponse } from '@shared/types/api';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 function buildProfileCastsKey({ fid }: { fid: string }) {
   return ['profileCasts', fid];
@@ -23,9 +24,12 @@ export function useProfileCasts({ fid }: { fid: string }) {
 export function useFetchProfileCasts() {
   const queryClient = useQueryClient();
 
-  return async ({ fid }: { fid: string }) => {
-    const data = buildProfileCastsFetcher({ fid })();
-    queryClient.setQueryData(buildProfileCastsKey({ fid }), data);
-    return data;
-  };
+  return useCallback(
+    async ({ fid }: { fid: string }) => {
+      const data = buildProfileCastsFetcher({ fid })();
+      queryClient.setQueryData(buildProfileCastsKey({ fid }), data);
+      return data;
+    },
+    [queryClient],
+  );
 }

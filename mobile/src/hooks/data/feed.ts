@@ -1,6 +1,7 @@
 import { baseApiUrl } from '@mobile/constants/api';
 import { FeedApiResponse } from '@shared/types/api';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 function buildFeedKey({ fid }: { fid: string }) {
   return ['feed', fid];
@@ -23,9 +24,12 @@ export function useFeed({ fid }: { fid: string }) {
 export function useFetchFeed() {
   const queryClient = useQueryClient();
 
-  return async ({ fid }: { fid: string }) => {
-    const data = buildFeedFetcher({ fid })();
-    queryClient.setQueryData(buildFeedKey({ fid }), data);
-    return data;
-  };
+  return useCallback(
+    async ({ fid }: { fid: string }) => {
+      const data = buildFeedFetcher({ fid })();
+      queryClient.setQueryData(buildFeedKey({ fid }), data);
+      return data;
+    },
+    [queryClient],
+  );
 }

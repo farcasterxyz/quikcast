@@ -1,4 +1,8 @@
-import { AuthKitProvider, useSignIn } from '@farcaster/auth-kit';
+import {
+  AuthKitProvider,
+  StatusAPIResponse,
+  useSignIn,
+} from '@farcaster/auth-kit';
 import { FullscreenLoader } from '@mobile/components/loader/FullscreenLoader';
 import { useFetchProfile } from '@mobile/hooks/data/profile';
 import { User } from '@shared/types/models';
@@ -10,6 +14,7 @@ import {
   useContext,
   useEffect,
   useReducer,
+  useRef,
 } from 'react';
 import { Linking } from 'react-native';
 
@@ -87,48 +92,58 @@ type AuthProviderProps = {
 function AuthProviderContent({ children }: AuthProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const fetchProfile = useFetchProfile();
+  const hasConnectedRef = useRef(false);
+  const hasLinkedUserRef = useRef(false);
 
   const {
     connect,
     url,
     signIn: authKitSignIn,
   } = useSignIn({
-    onSuccess: async (res) => {
-      const signInResponse = await fetch(
-        'http://localhost:3000/api/auth/sign-in',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            message: res.message,
-            nonce: res.nonce,
-            signature: res.signature,
-          }),
-        },
-      );
+    onSuccess: useCallback(
+      async (res: StatusAPIResponse) => {
+        const signInResponse = await fetch(
+          'http://localhost:3000/api/auth/sign-in',
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              message: res.message,
+              nonce: res.nonce,
+              signature: res.signature,
+            }),
+          },
+        );
 
-      if (signInResponse.ok) {
-        const { token, fid }: { token: string; fid: string } =
-          await signInResponse.json();
+        if (signInResponse.ok) {
+          const { token, fid }: { token: string; fid: string } =
+            await signInResponse.json();
 
-        const { profile: user } = await fetchProfile({ fid });
-        dispatch({ type: 'signIn', session: { token, fid }, user });
-      } else {
-        alert('Sign in failed');
-      }
-    },
+          const { profile: user } = await fetchProfile({ fid });
+          dispatch({ type: 'signIn', session: { token, fid }, user });
+        } else {
+          alert('Sign in failed');
+        }
+      },
+      [fetchProfile],
+    ),
   });
 
   const requestSignIn = useCallback(async () => {
-    if (!url) {
-      throw new Error('Expected authkit to provide url');
+    if (!hasConnectedRef.current) {
+      hasConnectedRef.current = true;
+      connect();
     }
+  }, [connect, hasConnectedRef]);
 
+  useEffect(() => {
     if (url) {
-      await connect();
-      await authKitSignIn(); // Starts polling
-      Linking.openURL(url);
+      authKitSignIn();
+      if (!hasLinkedUserRef.current) {
+        hasLinkedUserRef.current = true;
+        Linking.openURL(url);
+      }
     }
-  }, [authKitSignIn, connect, url]);
+  }, [authKitSignIn, url]);
 
   const signOut = useCallback(async () => {
     await fetch('http://localhost:3000/api/auth/sign-out', { method: 'POST' });
