@@ -9,7 +9,9 @@
 }
 
 @layer base {
+  html,
   body {
     font-size: 15px;
+    scrollbar-gutter: stable both-edges;
   }
 }
