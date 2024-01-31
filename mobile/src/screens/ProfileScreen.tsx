@@ -1,14 +1,16 @@
 import { Avatar } from '@mobile/components/avatar/Avatar';
 import { Cast } from '@mobile/components/feed/Cast';
-import { baseApiUrl } from '@mobile/constants/api';
+import { useProfile } from '@mobile/hooks/data/profile';
+import {
+  useFetchProfileCasts,
+  useProfileCasts,
+} from '@mobile/hooks/data/profileCasts';
 import { RootParamList } from '@mobile/types/navigation';
 import { buildScreen } from '@mobile/utils/buildScreen';
 import { useRoute } from '@react-navigation/native';
-import { ProfileApiResponse, ProfileCastsApiResponse } from '@shared/types/api';
 import { Cast as CastType } from '@shared/types/models';
 import { FlashList } from '@shopify/flash-list';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 
 function renderItem({ item }: { item: CastType }) {
@@ -18,30 +20,20 @@ function renderItem({ item }: { item: CastType }) {
 export const ProfileScreen = buildScreen(() => {
   const { fid } = useRoute().params as RootParamList['Profile'];
 
-  const profileKey = useMemo(() => ['profile', fid], [fid]);
-  const profileCastsKey = useMemo(() => ['profileCasts', fid], [fid]);
+  const { profile } = useProfile({ fid });
+  const { casts } = useProfileCasts({ fid });
+  const fetchProfileCasts = useFetchProfileCasts();
 
-  const [
-    {
-      data: { profile },
-    },
-    {
-      data: { casts },
-    },
-  ] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: profileKey,
-        queryFn: (): Promise<ProfileApiResponse> =>
-          fetch(`${baseApiUrl}/users/${fid}`).then((res) => res.json()),
-      },
-      {
-        queryKey: profileCastsKey,
-        queryFn: (): Promise<ProfileCastsApiResponse> =>
-          fetch(`${baseApiUrl}/users/${fid}/casts`).then((res) => res.json()),
-      },
-    ],
-  });
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    try {
+      setIsRefreshing(true);
+      await fetchProfileCasts({ fid });
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [fetchProfileCasts, fid]);
 
   return (
     <View className="flex-1 flex-col justify-between">
@@ -68,6 +60,8 @@ export const ProfileScreen = buildScreen(() => {
           data={casts}
           renderItem={renderItem}
           estimatedItemSize={190}
+          refreshing={isRefreshing}
+          onRefresh={onRefresh}
         />
       </View>
     </View>

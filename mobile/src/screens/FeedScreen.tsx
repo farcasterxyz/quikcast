@@ -1,41 +1,27 @@
 import { Cast } from '@mobile/components/feed/Cast';
-import { baseApiUrl } from '@mobile/constants/api';
+import { useFeed, useFetchFeed } from '@mobile/hooks/data/feed';
 import { buildScreen } from '@mobile/utils/buildScreen';
-import { FeedApiResponse } from '@shared/types/api';
 import { Cast as CastType } from '@shared/types/models';
 import { FlashList } from '@shopify/flash-list';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
-
-const feedKey = ['feed'];
-
-async function fetchFeed(): Promise<FeedApiResponse> {
-  const res = await fetch(`${baseApiUrl}/feed?fid=145`);
-  return res.json();
-}
 
 function renderItem({ item }: { item: CastType }) {
   return <Cast cast={item} />;
 }
 
 export const FeedScreen = buildScreen(() => {
-  const queryClient = useQueryClient();
-
+  const { feed } = useFeed({ fid });
+  const fetchFeed = useFetchFeed();
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const { feed } = useSuspenseQuery({
-    queryKey: feedKey,
-    queryFn: fetchFeed,
-  }).data;
 
   const onRefresh = useCallback(async () => {
     try {
       setIsRefreshing(true);
-      queryClient.setQueryData(feedKey, await fetchFeed());
+      await fetchFeed({ fid });
     } finally {
       setIsRefreshing(false);
     }
-  }, [queryClient]);
+  }, [fetchFeed]);
 
   return (
     <FlashList

@@ -1,17 +1,12 @@
-import { authOptions } from "@app/api/auth/[...nextauth]/route";
-import { LandingPage } from "@components/landing/LandingPage";
-import { ProfilePage } from "@components/profile/ProfilePage";
-import { getServerSession } from "next-auth";
+import { LandingPage } from '@components/landing/LandingPage';
+import { ProfilePage } from '@components/profile/ProfilePage';
+import { getCurrentUser } from '@lib/auth/getCurrentUser';
 
 export default async function Feed() {
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentUser();
 
-  if (session) {
-    const {
-      user: { fid },
-    } = session;
-
-    return <ProfilePage fid={fid} />;
+  if (user) {
+    return <ProfilePage fid={user.fid} />;
   }
 
   return <LandingPage />;

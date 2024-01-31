@@ -19,6 +19,7 @@
     "@tanstack/react-query": "^5.17.19",
     "date-fns": "^3.3.1",
     "expo": "50.0.3",
+    "expo-secure-store": "^12.8.1",
     "expo-status-bar": "1.11.1",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
