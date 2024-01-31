@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 export const LandingScreen = buildScreen(() => {
-  const { signIn } = useAuth();
+  const { requestSignIn } = useAuth();
   const [isSigningIn, setIsSigningIn] = useState(false);
 
   return (
@@ -15,7 +15,7 @@ export const LandingScreen = buildScreen(() => {
           setIsSigningIn(true);
 
           try {
-            await signIn();
+            await requestSignIn();
           } catch (error) {
             console.error(error);
           } finally {

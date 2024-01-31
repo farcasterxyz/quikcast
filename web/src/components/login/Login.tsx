@@ -9,7 +9,7 @@ import {
 import { useState } from 'react';
 
 async function handleSuccess(res: StatusAPIResponse) {
-  const signInresponse = await fetch('/api/auth/sign-in', {
+  const signInResponse = await fetch('/api/auth/sign-in', {
     method: 'POST',
     body: JSON.stringify({
       message: res.message,
@@ -18,7 +18,7 @@ async function handleSuccess(res: StatusAPIResponse) {
     }),
   });
 
-  if (signInresponse.ok) {
+  if (signInResponse.ok) {
     window.location.reload();
   } else {
     alert('Sign in failed');

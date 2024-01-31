@@ -1,4 +1,5 @@
 import { Cast } from '@mobile/components/feed/Cast';
+import { useAuth } from '@mobile/contexts/AuthProvider';
 import { useFeed, useFetchFeed } from '@mobile/hooks/data/feed';
 import { buildScreen } from '@mobile/utils/buildScreen';
 import { Cast as CastType } from '@shared/types/models';
@@ -10,18 +11,19 @@ function renderItem({ item }: { item: CastType }) {
 }
 
 export const FeedScreen = buildScreen(() => {
-  const { feed } = useFeed({ fid });
+  const { currentUser } = useAuth();
+  const { feed } = useFeed({ fid: currentUser!.fid });
   const fetchFeed = useFetchFeed();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
     try {
       setIsRefreshing(true);
-      await fetchFeed({ fid });
+      await fetchFeed({ fid: currentUser!.fid });
     } finally {
       setIsRefreshing(false);
     }
-  }, [fetchFeed]);
+  }, [currentUser, fetchFeed]);
 
   return (
     <FlashList

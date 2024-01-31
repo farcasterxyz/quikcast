@@ -16,12 +16,18 @@ import { Linking } from 'react-native';
 const AuthContext = createContext<{
   currentUser: User | undefined;
   isSignedIn: boolean;
-  signIn: () => Promise<void>;
+  requestSignIn: () => Promise<void>;
+  signOut: () => Promise<void>;
   token: string | undefined;
 }>({
   currentUser: undefined,
   isSignedIn: false,
-  signIn: async () => {
+  requestSignIn: async () => {
+    throw new Error(
+      'You need to add an AuthProvider to the top of your React tree.',
+    );
+  },
+  signOut: async () => {
     throw new Error(
       'You need to add an AuthProvider to the top of your React tree.',
     );
@@ -43,7 +49,7 @@ type State = {
 type Action =
   | { type: 'initWitUser'; session: Session; user: User }
   | { type: 'initWithoutUser' }
-  | { type: 'signIn' }
+  | { type: 'signIn'; session: Session; user: User }
   | { type: 'signOut' };
 
 const initialState: State = {
@@ -55,13 +61,21 @@ const initialState: State = {
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'initWitUser':
-      return { isInitialized: true, session: action.session };
+      return {
+        currentUser: action.user,
+        isInitialized: true,
+        session: action.session,
+      };
     case 'initWithoutUser':
-      return { isInitialized: true, session: undefined };
+      return {
+        currentUser: undefined,
+        isInitialized: true,
+        session: undefined,
+      };
     case 'signIn':
-      return { ...state };
+      return { ...state, currentUser: action.user, session: action.session };
     case 'signOut':
-      return { ...state };
+      return { ...state, session: undefined, currentUser: undefined };
   }
   return state;
 }
@@ -79,12 +93,32 @@ function AuthProviderContent({ children }: AuthProviderProps) {
     url,
     signIn: authKitSignIn,
   } = useSignIn({
-    onSuccess: (res) => {
-      // setToken(res);
+    onSuccess: async (res) => {
+      const signInResponse = await fetch(
+        'http://localhost:3000/api/auth/sign-in',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            message: res.message,
+            nonce: res.nonce,
+            signature: res.signature,
+          }),
+        },
+      );
+
+      if (signInResponse.ok) {
+        const { token, fid }: { token: string; fid: string } =
+          await signInResponse.json();
+
+        const { profile: user } = await fetchProfile({ fid });
+        dispatch({ type: 'signIn', session: { token, fid }, user });
+      } else {
+        alert('Sign in failed');
+      }
     },
   });
 
-  const signIn = useCallback(async () => {
+  const requestSignIn = useCallback(async () => {
     if (!url) {
       throw new Error('Expected authkit to provide url');
     }
@@ -95,6 +129,10 @@ function AuthProviderContent({ children }: AuthProviderProps) {
       Linking.openURL(url);
     }
   }, [authKitSignIn, connect, url]);
+
+  const signOut = useCallback(async () => {
+    await fetch('http://localhost:3000/api/auth/sign-out', { method: 'POST' });
+  }, []);
 
   const init = useCallback(async () => {
     const persistedSessionJson = await SecureStore.getItemAsync('session');
@@ -132,7 +170,8 @@ function AuthProviderContent({ children }: AuthProviderProps) {
       value={{
         currentUser: state.currentUser,
         isSignedIn: !!state.session,
-        signIn,
+        requestSignIn,
+        signOut,
         token: state.session?.token,
       }}
     >
