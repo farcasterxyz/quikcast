@@ -1,8 +1,4 @@
-import {
-  AuthKitProvider,
-  StatusAPIResponse,
-  useSignIn,
-} from '@farcaster/auth-kit';
+import { AuthKitProvider } from '@farcaster/auth-kit';
 import { FullscreenLoader } from '@mobile/components/loader/FullscreenLoader';
 import { useFetchProfile } from '@mobile/hooks/data/profile';
 import { User } from '@shared/types/models';
@@ -14,31 +10,15 @@ import {
   useContext,
   useEffect,
   useReducer,
-  useRef,
 } from 'react';
-import { Linking } from 'react-native';
 
-const AuthContext = createContext<{
-  currentUser: User | undefined;
-  isSignedIn: boolean;
-  requestSignIn: () => Promise<void>;
-  signOut: () => Promise<void>;
-  token: string | undefined;
-}>({
-  currentUser: undefined,
-  isSignedIn: false,
-  requestSignIn: async () => {
-    throw new Error(
-      'You need to add an AuthProvider to the top of your React tree.',
-    );
-  },
-  signOut: async () => {
-    throw new Error(
-      'You need to add an AuthProvider to the top of your React tree.',
-    );
-  },
-  token: undefined,
-});
+const sessionKey = 'session';
+
+type SignInParams = {
+  message: string;
+  nonce: string;
+  signature: string;
+};
 
 type Session = {
   fid: string;
@@ -52,10 +32,20 @@ type State = {
 };
 
 type Action =
-  | { type: 'initWitUser'; session: Session; user: User }
-  | { type: 'initWithoutUser' }
   | { type: 'signIn'; session: Session; user: User }
   | { type: 'signOut' };
+
+const AuthContext = createContext<{
+  currentUser: User | undefined;
+  isSignedIn: boolean;
+  signIn: (params: SignInParams) => Promise<void>;
+  signOut: () => Promise<void>;
+}>({
+  currentUser: undefined,
+  isSignedIn: false,
+  signIn: async () => undefined,
+  signOut: async () => undefined,
+});
 
 const initialState: State = {
   currentUser: undefined,
@@ -63,26 +53,21 @@ const initialState: State = {
   session: undefined,
 };
 
-function reducer(state: State, action: Action): State {
+function reducer(_state: State, action: Action): State {
   switch (action.type) {
-    case 'initWitUser':
+    case 'signIn':
       return {
-        currentUser: action.user,
         isInitialized: true,
+        currentUser: action.user,
         session: action.session,
       };
-    case 'initWithoutUser':
+    case 'signOut':
       return {
-        currentUser: undefined,
         isInitialized: true,
         session: undefined,
+        currentUser: undefined,
       };
-    case 'signIn':
-      return { ...state, currentUser: action.user, session: action.session };
-    case 'signOut':
-      return { ...state, session: undefined, currentUser: undefined };
   }
-  return state;
 }
 
 type AuthProviderProps = {
@@ -92,85 +77,60 @@ type AuthProviderProps = {
 function AuthProviderContent({ children }: AuthProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const fetchProfile = useFetchProfile();
-  const hasConnectedRef = useRef(false);
-  const hasLinkedUserRef = useRef(false);
 
-  const {
-    connect,
-    url,
-    signIn: authKitSignIn,
-  } = useSignIn({
-    onSuccess: useCallback(
-      async (res: StatusAPIResponse) => {
+  const signIn = useCallback(
+    async (body: SignInParams) => {
+      const reject = (message: string) => {
+        throw new Error(`Sign in failed: ${message}`);
+      };
+      try {
         const signInResponse = await fetch(
           'http://localhost:3000/api/auth/sign-in',
           {
             method: 'POST',
-            body: JSON.stringify({
-              message: res.message,
-              nonce: res.nonce,
-              signature: res.signature,
-            }),
+            body: JSON.stringify(body),
           },
         );
 
-        if (signInResponse.ok) {
-          const { token, fid }: { token: string; fid: string } =
-            await signInResponse.json();
-
-          const { profile: user } = await fetchProfile({ fid });
-          dispatch({ type: 'signIn', session: { token, fid }, user });
-        } else {
-          alert('Sign in failed');
+        if (!signInResponse.ok) {
+          reject(await signInResponse.text());
         }
-      },
-      [fetchProfile],
-    ),
-  });
 
-  const requestSignIn = useCallback(async () => {
-    if (!hasConnectedRef.current) {
-      hasConnectedRef.current = true;
-      connect();
-    }
-  }, [connect, hasConnectedRef]);
-
-  useEffect(() => {
-    if (url) {
-      authKitSignIn();
-      if (!hasLinkedUserRef.current) {
-        hasLinkedUserRef.current = true;
-        Linking.openURL(url);
+        const session: Session = await signInResponse.json();
+        // await SecureStore.setItemAsync(sessionKey, JSON.stringify(session));
+        const { profile: user } = await fetchProfile({ fid: session.fid });
+        dispatch({ type: 'signIn', session, user });
+      } catch (error) {
+        reject((error as Error).message);
       }
-    }
-  }, [authKitSignIn, url]);
+    },
+    [fetchProfile],
+  );
 
   const signOut = useCallback(async () => {
-    await fetch('http://localhost:3000/api/auth/sign-out', { method: 'POST' });
-  }, []);
+    SecureStore.deleteItemAsync(sessionKey);
+    if (state.session) {
+      await fetch('http://localhost:3000/api/auth/sign-out', {
+        method: 'POST',
+      });
+    }
+
+    dispatch({ type: 'signOut' });
+  }, [state.session]);
 
   const init = useCallback(async () => {
-    const persistedSessionJson = await SecureStore.getItemAsync('session');
+    const persistedSessionJson = await SecureStore.getItemAsync(sessionKey);
 
     if (persistedSessionJson) {
       try {
-        const persistedSession: Session = JSON.parse(persistedSessionJson);
-        const { profile: user } = await fetchProfile({
-          fid: persistedSession.fid,
-        });
-
-        return dispatch({
-          type: 'initWitUser',
-          session: persistedSession,
-          user,
-        });
+        signIn(JSON.parse(persistedSessionJson));
       } catch (error) {
         console.error(error);
       }
     }
 
-    dispatch({ type: 'initWithoutUser' });
-  }, [fetchProfile]);
+    dispatch({ type: 'signOut' });
+  }, [signIn]);
 
   useEffect(() => {
     init();
@@ -185,9 +145,8 @@ function AuthProviderContent({ children }: AuthProviderProps) {
       value={{
         currentUser: state.currentUser,
         isSignedIn: !!state.session,
-        requestSignIn,
+        signIn,
         signOut,
-        token: state.session?.token,
       }}
     >
       {children}
