@@ -29,14 +29,7 @@ export default function Login() {
   const [error, setError] = useState<AuthClientError>();
 
   return (
-    <AuthKitProvider
-      config={{
-        relay: 'https://relay.farcaster.xyz',
-        rpcUrl: 'https://mainnet.optimism.io',
-        siweUri: 'http://localhost:3000',
-        domain: 'localhost:3000',
-      }}
-    >
+    <AuthKitProvider>
       <div className="flex flex-col gap-2">
         <SignInButton onSuccess={handleSuccess} onError={setError} />
         {error && <div className="pt-4 text-red-500">{error.message}</div>}
