@@ -25,24 +25,39 @@ type Session = {
   token: string;
 };
 
-type State = {
-  currentUser: User | undefined;
-  isInitialized: boolean;
-  session: Session | undefined;
-};
+type State =
+  | { isInitialized: false; currentUser: undefined; session: undefined }
+  | {
+      isInitialized: true;
+      currentUser: undefined;
+      session: undefined;
+    }
+  | {
+      currentUser: User;
+      isInitialized: true;
+      session: Session;
+    };
 
 type Action =
   | { type: 'onSignIn'; session: Session; user: User }
   | { type: 'onSignOut' };
 
-const AuthContext = createContext<{
-  currentUser: User | undefined;
-  isSignedIn: boolean;
+type AuthContextMethods = {
   signIn: (params: SignInParams) => Promise<void>;
   signOut: () => Promise<void>;
-}>({
+};
+
+type AuthContextValue = AuthContextMethods &
+  Pick<State, 'currentUser' | 'session'>;
+
+type AuthenticatedAuthContextValue = AuthContextMethods & {
+  currentUser: User;
+  session: Session;
+};
+
+const AuthContext = createContext<AuthContextValue>({
   currentUser: undefined,
-  isSignedIn: false,
+  session: undefined,
   signIn: async () => undefined,
   signOut: async () => undefined,
 });
@@ -148,7 +163,7 @@ function AuthProviderContent({ children }: AuthProviderProps) {
     <AuthContext.Provider
       value={{
         currentUser: state.currentUser,
-        isSignedIn: !!state.session,
+        session: state.session,
         signIn,
         signOut,
       }}
@@ -175,4 +190,8 @@ export function AuthProvider(props: AuthProviderProps) {
 
 export function useAuth() {
   return useContext(AuthContext);
+}
+
+export function useAuthed() {
+  return useContext(AuthContext) as AuthenticatedAuthContextValue;
 }

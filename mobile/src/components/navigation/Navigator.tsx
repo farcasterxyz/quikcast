@@ -8,11 +8,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator<RootParamList>();
 
 export function Navigator() {
-  const { isSignedIn } = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <Stack.Navigator>
-      {isSignedIn ? (
+      {currentUser ? (
         <>
           <Stack.Screen
             name="Feed"
