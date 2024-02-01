@@ -24,12 +24,16 @@ export function Login() {
     url,
   } = useSignIn({
     onSuccess: useCallback(
-      (req: StatusAPIResponse) => {
-        signIn({
-          message: req.message!,
-          nonce: req.nonce!,
-          signature: req.signature!,
-        });
+      async (req: StatusAPIResponse) => {
+        try {
+          signIn({
+            message: req.message!,
+            nonce: req.nonce!,
+            signature: req.signature!,
+          });
+        } catch (error) {
+          alert((error as Error).message);
+        }
       },
       [signIn],
     ),
@@ -43,10 +47,8 @@ export function Login() {
 
     if (!hasInitiatedConnectRef.current) {
       hasInitiatedConnectRef.current = true;
-      console.log('connecting');
       await connect();
     } else if (isConnectError) {
-      console.log('reconnecting');
       reconnect();
     }
   }, [connect, isConnectError, reconnect]);

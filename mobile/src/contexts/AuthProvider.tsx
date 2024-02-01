@@ -32,8 +32,8 @@ type State = {
 };
 
 type Action =
-  | { type: 'signIn'; session: Session; user: User }
-  | { type: 'signOut' };
+  | { type: 'onSignIn'; session: Session; user: User }
+  | { type: 'onSignOut' };
 
 const AuthContext = createContext<{
   currentUser: User | undefined;
@@ -55,13 +55,13 @@ const initialState: State = {
 
 function reducer(_state: State, action: Action): State {
   switch (action.type) {
-    case 'signIn':
+    case 'onSignIn':
       return {
         isInitialized: true,
         currentUser: action.user,
         session: action.session,
       };
-    case 'signOut':
+    case 'onSignOut':
       return {
         isInitialized: true,
         session: undefined,
@@ -83,6 +83,7 @@ function AuthProviderContent({ children }: AuthProviderProps) {
       const reject = (message: string) => {
         throw new Error(`Sign in failed: ${message}`);
       };
+
       try {
         const signInResponse = await fetch(
           'http://localhost:3000/api/auth/sign-in',
@@ -97,9 +98,9 @@ function AuthProviderContent({ children }: AuthProviderProps) {
         }
 
         const session: Session = await signInResponse.json();
-        // await SecureStore.setItemAsync(sessionKey, JSON.stringify(session));
+        await SecureStore.setItemAsync(sessionKey, JSON.stringify(session));
         const { profile: user } = await fetchProfile({ fid: session.fid });
-        dispatch({ type: 'signIn', session, user });
+        dispatch({ type: 'onSignIn', session, user });
       } catch (error) {
         reject((error as Error).message);
       }
@@ -115,7 +116,7 @@ function AuthProviderContent({ children }: AuthProviderProps) {
       });
     }
 
-    dispatch({ type: 'signOut' });
+    dispatch({ type: 'onSignOut' });
   }, [state.session]);
 
   const init = useCallback(async () => {
@@ -123,14 +124,17 @@ function AuthProviderContent({ children }: AuthProviderProps) {
 
     if (persistedSessionJson) {
       try {
-        signIn(JSON.parse(persistedSessionJson));
+        const session: Session = JSON.parse(persistedSessionJson);
+        const { profile: user } = await fetchProfile({ fid: session.fid });
+        dispatch({ type: 'onSignIn', session, user });
       } catch (error) {
         console.error(error);
+        dispatch({ type: 'onSignOut' });
       }
+    } else {
+      dispatch({ type: 'onSignOut' });
     }
-
-    dispatch({ type: 'signOut' });
-  }, [signIn]);
+  }, [fetchProfile]);
 
   useEffect(() => {
     init();
