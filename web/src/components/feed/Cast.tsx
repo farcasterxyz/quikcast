@@ -9,6 +9,10 @@ type CastProps = {
 };
 
 export function Cast({ cast }: CastProps) {
+  if (cast.embeds.casts.length > 0) {
+    return null;
+  }
+
   return (
     <div className="flex flex-row gap-2 border-b-gray-200 px-4 py-3 [&:not(:first-child)]:border-t">
       <a href={`https://warpcast.com/${cast.user.username}`} target="_blank">
