@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   });
 
   const verifyResult = await appClient.verifySignInMessage({
-    domain: 'localhost:3000',
+    domain: process.env.SIWF_DOMAIN || "localhost:3000",
     message,
     nonce,
     signature,
