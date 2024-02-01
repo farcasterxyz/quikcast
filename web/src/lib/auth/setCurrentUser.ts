@@ -1,8 +1,9 @@
+import { setSessionToken } from '@lib/redis/sessions';
 import { cookies } from 'next/headers';
 
-import { tokenKey, tokens } from './shared';
+import { tokenKey } from './shared';
 
-export function setCurrentUser({ token, fid }: { token: string; fid: string }) {
+export async function setCurrentUser({ token, fid }: { token: string; fid: string }) {
   cookies().set(tokenKey, token, { secure: true });
-  tokens[token] = fid;
+  return setSessionToken({ token, fid });
 }

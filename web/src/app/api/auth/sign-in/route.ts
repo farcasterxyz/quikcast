@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   const token = randomUUID();
   const fid = verifyResult.fid.toString();
 
-  setCurrentUser({ token, fid });
+  await setCurrentUser({ token, fid });
 
   return NextResponse.json({ fid, token });
 }

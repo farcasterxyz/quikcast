@@ -1,8 +1,8 @@
+import { getSessionByToken } from '@lib/redis/sessions';
 import { getProfile } from '@lib/services/user';
 import { User } from '@shared/types/models';
 
 import { getTokenFromCookieOrHeader } from './getTokenFromCookieOrHeader';
-import { tokens } from './shared';
 
 export async function getCurrentUser(): Promise<User | null> {
   const token = getTokenFromCookieOrHeader();
@@ -11,7 +11,8 @@ export async function getCurrentUser(): Promise<User | null> {
     return null;
   }
 
-  const fid = tokens[token];
+  const res = await getSessionByToken({ token });
+  const { fid } = res;
 
   if (!fid) {
     return null;
